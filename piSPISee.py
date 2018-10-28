@@ -19,6 +19,29 @@ class Sender:
         sock.close()
         return response
 
+    @staticmethod
+    def tcp_server(id):
+        if hasGPIO:
+            GPIO.setmode(GPIO.BCM)
+            GPIO.setup(22, GPIO.OUT)
+            GPIO.output(22, GPIO.HIGH)
+        print ":: Opening Listener on Port 9999 ::"
+        running = True
+        # Create the serverside socket
+        server = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+        server.bind(('0.0.0.0',9999))
+        server.listen(5)
+        while running:
+            client, addr = server.accept()
+            print "Connection accepted from "+str(addr[0])+":"+str(addr[1])
+            peerID = server.recv(4096)
+            print peerID
+            # Send back own ID
+            server.send(id)
+            print "Hand Shake [1/2] Completed"
+            running = False
+        return False
+
 
 class Reciever:
 
@@ -30,16 +53,7 @@ class Reciever:
         sock.close()
         return message
 
-    @staticmethod
-    def tcp_server():
-        if hasGPIO:
-            GPIO.setmode(GPIO.BCM)
-            GPIO.setup(22,GPIO.OUT)
-            GPIO.output(22,GPIO.HIGH)
-        print ":: Opening Listener on Port 9999 ::"
-        running = True
 
-        
 def whoAmI():
     # os.system("sudo su")
     os.system("touch self.txt")
@@ -84,7 +98,11 @@ def main():
             ip,mac, interfaces  = whoAmI()
             # Generate PeerID
             myID = hashlib.sha256(ip+mac).hexdigest()
-
+            print 'PI_ID Generated: '+myID
+            print 'Launching PiSide-Vision'
+            running = True
+            while running:
+                running = Sender.tcp_server(myID)
 
 
 if __name__ == '__main__':
