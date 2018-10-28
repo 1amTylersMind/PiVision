@@ -12,9 +12,17 @@ def swap(fname, destroy):
     return data
 
 
-os.system('ls remoteImagery/ >> images.txt')
-pictures = swap('images.txt',True)
-print str(len(pictures)) + " Pictures Found "
-image = plt.imread('remoteImagery/'+pictures.pop())
-plt.imshow(image)
-plt.show()
+def image_playback():
+    f = plt.figure()
+    os.system('ls remoteImagery/ >> images.txt')
+    pictures = swap('images.txt', True)
+    print str(len(pictures)) + " Pictures Found "
+    reel = []
+    for picture in pictures:
+        image = plt.imread('remoteImagery/' + picture)
+        reel.append([plt.imshow(image)])
+    a = animation.ArtistAnimation(f, reel, interval=1000, blit=True, repeat_delay=1000)
+    plt.show()
+
+
+image_playback()
