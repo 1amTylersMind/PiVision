@@ -25,4 +25,8 @@ def image_playback():
     plt.show()
 
 
+os.system("echo 'Updating Image Library'")
+os.system('git pull origin')
+
+
 image_playback()

@@ -14,7 +14,8 @@ def swap(fname, destroy):
 def image_capture(fnameout):
     GPIO.setmode(GPIO.BCM)
     GPIO.setup(22,GPIO.OUT)
-    GPIO.output(22,GPIO.HIGH) 
+    GPIO.output(22,GPIO.HIGH)
+    os.system('git pull origin HEAD:master')
     try:
         cmd = 'raspistill -o remoteImagery/' + fnameout
         os.system(cmd)
