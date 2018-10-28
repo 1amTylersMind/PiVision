@@ -15,7 +15,7 @@ def image_capture(fnameout):
     GPIO.output(22,GPIO.HIGH) 
     cmd = 'raspistill -o remoteImagery/'+fnameout
     os.system(cmd)
-    os.system('git add remote/Imagery'+fnameout)
+    os.system('git add remoteImagery/'+fnameout)
     os.system('git commit -m "Automated ImagePostage"')
     os.system('git push origin HEAD:master')
 
