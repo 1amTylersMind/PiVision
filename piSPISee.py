@@ -37,6 +37,7 @@ class Sender:
             peerID = server.recv(4096)
             print peerID
             # Send back own ID
+            server.connect((client,addr))
             server.send(id)
             print "Hand Shake [1/2] Completed"
             running = False
