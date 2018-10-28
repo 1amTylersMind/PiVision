@@ -1,4 +1,5 @@
 import os, sys, time
+import RPi.GPIO as GPIO
 
 def swap(fname,destroy):
     data = []
@@ -9,12 +10,14 @@ def swap(fname,destroy):
     return data
 
 def image_capture(fnameout):
-    cmd = 'raspistill -o '+fnameout
+    GPIO.setmode(GPIO.BCM)
+    GPIO.setup(22,GPIO.OUT)
+    GPIO.output(22,GPIO.HIGH) 
+    cmd = 'raspistill -o '+remoteImagery/fnameout
     os.system(cmd)
-    os.system('git add '+fnameout)
+    os.system('git add remote/Imagery'+fnameout)
     os.system('git commit -m "Automated ImagePostage"')
-    os.system('push origin HEAD:master')
-
+    os.system('git push origin HEAD:master')
 
 def main():
     if len(sys.argv) < 2:
@@ -22,3 +25,8 @@ def main():
     else:
         fname = sys.argv[1] 
         image_capture(fname)
+        GPIO.output(22,GPIO.LOW)
+        GPIO.cleanup()
+if __name__ == '__main__':
+    main()
+ 
