@@ -68,10 +68,6 @@ def main():
             print 'Image Captured!'
             print '[Dimension ' + str(image_data.shape) + ']'
             phone_home(image_data.shape)
-
-
-    if len(sys.argv)>2:
-        usage()
     else:
         usage()
 
