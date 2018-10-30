@@ -12,7 +12,7 @@ def hand_shake(client, addr):
     return passwd
 
 
-def phone_home(img_dims,ip):
+def phone_home(img_dims):
     msg = 'INCOMING IMAGE\n'+str(img_dims)+'\nEOM'
     # whip up a quick socket
     s = socket.socket()
@@ -60,12 +60,14 @@ def main():
             debug = True
         # Capture image (debug supplies existing image)
         if not debug:
+            print "Snapping Image"
             os.system('raspistill -o ' + fname)
-        # Convert Image to matrix
-        image_data = np.array(Image.open(fname))
-        # Let the user know the picture was taken successfully
-        print 'Image Captured!'
-        print '[Dimension ' + str(image_data.shape) + ']'
+            # Convert Image to matrix
+            image_data = np.array(Image.open(fname))
+            # Let the user know the picture was taken successfully
+            print 'Image Captured!'
+            print '[Dimension ' + str(image_data.shape) + ']'
+            phone_home(image_data.shape)
 
 
     if len(sys.argv)>2:
