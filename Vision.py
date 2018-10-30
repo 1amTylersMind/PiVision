@@ -63,24 +63,26 @@ def read_page(matrices):
         slice_stack.append(img_slices)
 
     # Process the slice stack looking for deviations in noise
-    # test = slice_stack.pop(1)[6]
     image_processing(slice_stack)
 
 
 def image_processing(sliceStack):
+    edges_detected = 0
     for slab in sliceStack:
         for iMat in slab.values():
             test = np.array(iMat).flatten()
             signal = []
             buff = []
-            buffsz = 25
+            buffsz = 100
             for point in test:
                 buff.append(point)
                 if len(buff) == buffsz:
                     signal.append(np.sum(np.array(buff)))
                     buff = []
+            f, axs = plt.subplots(1,2,figsize=(5,5))
             samples = int(test.shape[0] / buffsz)
-            plt.plot(np.linspace(0, samples, samples), signal)
+            axs[0].plot(np.linspace(0, samples, samples),signal)
+            axs[1].imshow(iMat, 'gray_r')
             plt.show()
 
 
@@ -91,7 +93,7 @@ def box_filter_maker(matrix):
                [1,0,0,0,1],
                [1,0,0,0,1],
                [1,1,1,1,1]]
-    invPhil  = np.ones(np.array(philBox).shape) - np.array(philBox)
+
     boxRow = np.concatenate((philBox, philBox, philBox,
                              philBox, philBox, philBox,
                              philBox, philBox, philBox,
@@ -99,14 +101,14 @@ def box_filter_maker(matrix):
     grid = np.concatenate((boxRow, boxRow, boxRow, boxRow,
                            boxRow, boxRow, boxRow, boxRow,
                            boxRow, boxRow, boxRow), 0)
-
     # should i slice'N'dice Image to lower mem overhead ?
     # No, that makes it worse bc conv is cyc more expensive
-    plt.imshow(ndi.convolve(matrix, invPhil,origin=0), 'gray_r')
-    plt.show()
+    # plt.imshow(ndi.convolve(matrix, invPhil,origin=0), 'gray_r')
+    # plt.show()
+    # matrix = ndi.convolve(matrix, philBox,origin=0)
 
-    qx = int(bounds[0]/4)
-    qy = int(bounds[1]/4)
+    qy = int(bounds[0]/4)
+    qx = int(bounds[1]/4)
 
     slices = {1: matrix[0:qx, 0:qy],
               2: matrix[qx:2*qx, 0:qy],
@@ -124,7 +126,6 @@ def box_filter_maker(matrix):
               14:matrix[qx:2*qx, 3*qy:4*qy],
               15:matrix[2*qx:3*qx, 3*qy:4*qy],
               16:matrix[3*qx:4*qx, 3*qy:4*qy]}
-
     # f = plt.figure()
     # film = []
     # for mat in slices.values():
@@ -171,7 +172,6 @@ def main():
     # plt.title('Frame with filtering')
     # plt.show()
     # read_page(images)
-
 
 
 if __name__ == '__main__':
