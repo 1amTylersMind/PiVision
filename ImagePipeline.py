@@ -56,18 +56,15 @@ def main():
     debug = False
     if len(sys.argv) > 1:
         fname = sys.argv[1]
-        if len(sys.argv) == 2:
-            debug = True
         # Capture image (debug supplies existing image)
-        if not debug:
-            print "Snapping Image"
-            os.system('raspistill -o ' + fname)
-            # Convert Image to matrix
-            image_data = np.array(Image.open(fname))
-            # Let the user know the picture was taken successfully
-            print 'Image Captured!'
-            print '[Dimension ' + str(image_data.shape) + ']'
-            phone_home(image_data.shape)
+        print "Snapping Image"
+        os.system('raspistill -o ' + fname)
+        # Convert Image to matrix
+        image_data = np.array(Image.open(fname))
+        # Let the user know the picture was taken successfully
+        print 'Image Captured!'
+        print '[Dimension ' + str(image_data.shape) + ']'
+        phone_home(image_data.shape)
     else:
         usage()
 
