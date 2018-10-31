@@ -5,8 +5,8 @@ from Crypto.Cipher import AES
 from Crypto import Random
 
 
-def hand_shake(client, addr):
-    passwd = client.recv(1024)
+def hand_shake(client):
+    passwd = client.recv(4096)
     # Send back ACK
     client.send('ACK '+passwd)
     return passwd
@@ -31,7 +31,7 @@ def phone_home(img_dims):
         exit(0)
 
     print addr
-    print key
+    print keys
 
 
 def aes_encrypt(password,message):
@@ -53,7 +53,7 @@ def usage():
 
 
 def main():
-    debug = False
+    debug = True
     if len(sys.argv) > 1:
         fname = sys.argv[1]
         # Capture image (debug supplies existing image)
@@ -65,6 +65,11 @@ def main():
         print 'Image Captured!'
         print '[Dimension ' + str(image_data.shape) + ']'
         phone_home(image_data.shape)
+        if debug:
+            try:
+                os.system('rm ' + fname)
+            except:
+                pass
     else:
         usage()
 
