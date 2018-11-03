@@ -5,27 +5,26 @@ from Crypto.Cipher import AES
 from Crypto import Random
 
 
-def hand_shake(client):
-    passwd = client.recv(4096)
-    # Send back ACK
-    client.send('ACK '+passwd)
-    return passwd
+def transmitter(client,matrix):
+    line = ''
+    for pixel in matrix.flatten():
+        line += str(pixel) + ' '
+    client.send(line)
+    return client.recv(1024)
 
 
-def phone_home(img_dims):
+def phone_home(img_dims,imageData):
     msg = 'INCOMING IMAGE\n'+str(img_dims)+'\nEOM'
     # whip up a quick socket
     s = socket.socket()
     s.bind(('0.0.0.0',9999))
     s.listen(5)
     remotes = []
-    keys = []
     try:
         client, addr = s.accept()
-        client_handler = threading.Thread(target=hand_shake,args=(client,addr))
+        client_handler = threading.Thread(target=transmitter,args=(client, imageData))
         key = client_handler.start()
         remotes.append(addr)
-        keys.append(key)
     except IOError:
         s.close()
         exit(0)
@@ -64,7 +63,7 @@ def main():
         # Let the user know the picture was taken successfully
         print 'Image Captured!'
         print '[Dimension ' + str(image_data.shape) + ']'
-        phone_home(image_data.shape)
+        phone_home(image_data.shape,image_data)
         if debug:
             try:
                 os.system('rm ' + fname)
