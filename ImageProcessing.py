@@ -1,4 +1,4 @@
-import numpy as np, matplotlib.pyplot as plt, matplotlib.animation as animation 
+import numpy as np, matplotlib.pyplot as plt
 from scipy.signal import convolve2d
 from scipy.ndimage.interpolation import zoom
 from scipy.ndimage import median_filter
@@ -120,7 +120,6 @@ def kmeans_clustering(imat):
     for n, contour in enumerate(simplified_contours):
         plt.plot(contour[:, 1], contour[:, 0], linewidth=2)
     
-    
     plt.ylim(h,0)
     plt.axes().set_aspect('equal')
     plt.show()
@@ -133,8 +132,8 @@ def main():
 
     # Separate into R, G and B plots
     colors = color_separate(imat)
-    edges = sobel_edges(imat[700:1400,1000:1700])
-    cc, svg, segments = kmeans_clustering(imat[700:1400,1000:1700])
+    edges = sobel_edges(imat)
+    cc, svg, segments = kmeans_clustering(imat)
 
     
 if __name__ == '__main__':

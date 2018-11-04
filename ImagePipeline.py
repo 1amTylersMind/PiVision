@@ -28,9 +28,8 @@ def phone_home(img_dims,imageData):
     except IOError:
         s.close()
         exit(0)
-
-    print addr
-    print keys
+    print key
+    return key
 
 
 def aes_encrypt(password,message):
